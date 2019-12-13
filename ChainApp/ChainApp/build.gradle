@@ -1,0 +1,83 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+// Specify the JDK version and change it to the system version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    maven {
+         url "http://maven.aliyun.com/nexus/content/groups/public/"
+    }
+
+	maven { url "https://dl.bintray.com/ethereum/maven/" }
+	maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+    mavenLocal()
+    mavenCentral()
+}
+
+List logger = [
+	"org.slf4j:jul-to-slf4j:1.7.10",
+	"org.apache.logging.log4j:log4j-api:2.1",
+	"org.apache.logging.log4j:log4j-core:2.1",
+	"org.apache.logging.log4j:log4j-slf4j-impl:2.1",
+	"org.apache.logging.log4j:log4j-web:2.1"
+]
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile logger
+    runtime logger
+
+	compile ("org.fisco-bcos:web3sdk:2.1.0")
+}
+
+sourceSets {
+	main {
+		java {
+	        srcDir 'src/main/java'
+		}
+        resources  {
+            srcDir 'src/main/resources'
+        }
+	}
+}
+
+jar {
+	destinationDir file('dist/apps')
+	archiveName project.name + '.jar'
+	exclude '**/*.xml'
+	exclude '**/*.properties'
+	exclude '**/*.jks'
+	exclude '**/*.pem'
+	exclude '**/*.crt'
+	exclude '**/*.key'
+
+    doLast {
+        copy {
+            from file('src/main/resources/')
+            into 'dist/conf'
+        }
+		copy {
+			from configurations.runtime
+			into 'dist/lib'
+		}
+		copy {
+			from file('.').listFiles().findAll{File f -> (f.name.endsWith('.bat') || f.name.endsWith('.sh') || f.name.endsWith('.env'))}
+			into 'dist'
+		}
+		copy {
+			from file('src/main/executive/sol')
+			into 'dist/contracts'
+		}
+		copy {
+			from file('src/main/executive/shell')
+			into 'dist/bin'
+		}
+	}
+}

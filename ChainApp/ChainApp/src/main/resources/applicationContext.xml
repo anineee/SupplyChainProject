@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+         http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+         http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+    
+    <!-- AMOP消息处理线程池配置，根据实际需要配置 -->
+	<bean id="pool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="50" />
+		<property name="maxPoolSize" value="100" />
+		<property name="queueCapacity" value="500" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor.AbortPolicy" />
+		</property>
+	</bean>
+
+	<bean id="groupChannelConnectionsConfig" class="org.fisco.bcos.channel.handler.GroupChannelConnectionsConfig">
+		<property name="caCert" value="ca.crt" />
+		<property name="sslCert" value="sdk.crt" />
+		<property name="sslKey" value="sdk.key" />
+		<property name="allChannelConnections">
+			<list>
+				<bean id="group1"  class="org.fisco.bcos.channel.handler.ChannelConnections">
+					<property name="groupId" value="1" />
+					<property name="connectionsStr">
+						<list>
+							<value>127.0.0.1:20200</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="channelService" class="org.fisco.bcos.channel.client.Service" depends-on="groupChannelConnectionsConfig">
+		<property name="groupId" value="1" />
+		<property name="orgID" value="fisco" />
+		<property name="allChannelConnections" ref="groupChannelConnectionsConfig"></property>
+	</bean>
+
+	<!-- key pair -->
+	<bean id="pem0" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0x8a5849e36fbaac6f8232344410aae9c4bbc5d3b7.pem" />
+	</bean>
+	<bean id="pem1" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0x611e5c4e3f9bf24d269aad87d018a35d793ee76b.pem" />
+	</bean>
+	<bean id="pem2" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xb9dd8b280636027c5fa1e1851ffb63bb649772b9.pem" />
+	</bean>
+	<bean id="pem3" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xb27ab79d946c27058f50252b87bdde689a9f666e.pem" />
+	</bean>
+	<bean id="pem4" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xd4da52ccf7ed36a28a21879bf54f7619086f0b49.pem" />
+	</bean>
+	<bean id="pem5" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xf8bd4198fe964302024e1d0b71d5c5e4ab173cfe.pem" />
+	</bean>
+	<bean id="pem6" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xcaf3325bdb9c96b70dd904b5ea01ccff2716f443.pem" />
+	</bean>
+	<bean id="pem7" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xbeea8d8ea9c3c59aeaf341756ab474597452495b.pem" />
+	</bean>
+	<bean id="pem8" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0x25c90b627ba385104b4a0200dce0b69f562129c0.pem" />
+	</bean>
+	<bean id="pem9" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xa5e6f454e9628c92b8b73364a7d402e472e5020a.pem" />
+	</bean>
+	<bean id="pem10" class="org.fisco.bcos.channel.client.PEMManager" init-method="load" >
+		<property name="pemFile" value="classpath:0xf0bcf7fa5a32f71ab316dbefacb68ef7360b3b23.pem" />
+	</bean>
+</beans>
